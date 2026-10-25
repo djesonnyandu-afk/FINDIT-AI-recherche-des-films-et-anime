@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07132f">
+<title>FINDIT AI — Trouve ce que tu cherches</title>
+<style>
+:root{color-scheme:dark;--bg:#07132f;--panel:#101f42;--line:#2a3c69;--text:#f4f7ff;--muted:#b6c4e6;--blue:#13c8ff;--purple:#8a5cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#122b61 0,#07132f 52%,#040a19 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);min-height:100vh;padding:20px}
+main{max-width:720px;margin:auto}.brand{text-align:center;padding:18px 8px 24px}.logo{width:94px;height:94px;border-radius:28px;margin:auto auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#13c8ff,#315bff 55%,#8a5cff);box-shadow:0 10px 38px #126bff55;font-size:48px}.brand h1{font-size:clamp(32px,8vw,46px);margin:0;letter-spacing:1px}.brand h1 span{color:var(--blue)}.tag{color:var(--muted);margin:8px 0 0}.card{background:#0d1a37eF;border:1px solid var(--line);border-radius:20px;padding:20px;margin:14px 0;box-shadow:0 12px 30px #0002}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 18px}.tab,button{font:inherit;font-weight:700;border-radius:12px;padding:12px;border:1px solid var(--line);background:#13254b;color:var(--text);cursor:pointer}.tab[aria-pressed=true],.primary{background:linear-gradient(100deg,#087bd9,#5146df);border-color:transparent}.field{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:#08142e;color:var(--text);font:inherit;font-size:16px;margin:7px 0 15px}.muted{color:var(--muted);font-size:14px;line-height:1.5}label{font-weight:650;font-size:14px}.primary{width:100%;padding:14px}.result{border:1px solid var(--line);padding:13px;border-radius:12px;margin-top:10px}.badge{display:inline-block;font-size:12px;border-radius:99px;padding:4px 8px;background:#1a3260;color:#9eeaff;margin-bottom:7px}.features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.feature{background:#101f42;border:1px solid var(--line);border-radius:14px;padding:13px}.feature strong{display:block;margin:6px 0}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 28px}img.preview{max-width:100%;max-height:240px;border-radius:12px;display:block;margin:8px 0}@media(max-width:420px){body{padding:12px}.card{padding:15px}.features{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<header class="brand">
+  <div class="logo" aria-hidden="true">🔎</div>
+  <h1>FINDIT <span>AI</span></h1>
+  <p class="tag">Trouve ce que tu cherches.</p>
+</header>
+<section class="card">
+  <h2 style="margin:0">🎬 Retrouve un film ou un animé</h2>
+  <p class="muted">Raconte une scène ou sélectionne une photo pour commencer ta recherche.</p>
+  <div class="tabs">
+    <button class="tab" id="descTab" aria-pressed="true">📝 Description</button>
+    <button class="tab" id="photoTab" aria-pressed="false">📸 Photo</button>
+  </div>
+  <div id="descPanel">
+    <label for="description">Que se passe-t-il dans la scène ?</label>
+    <textarea class="field" id="description" rows="4" placeholder="Ex. : un jeune ninja veut devenir le chef de son village..."></textarea>
+  </div>
+  <div id="photoPanel" class="hidden">
+    <label for="photo">Choisis une image sur ton téléphone</label>
+    <input class="field" id="photo" type="file" accept="image/*">
+    <div id="preview"></div>
+    <p class="muted">Tu peux envoyer une photo ou décrire la scène. L’analyse IA peut prendre quelques secondes.</p>
+  </div>
+  <label for="kind">Catégorie</label>
+  <select class="field" id="kind"><option value="all">Films et animés</option><option value="film">Films</option><option value="anime">Animés</option></select>
+  <button class="primary" id="search">🔍 Rechercher un titre</button>
+  <p id="status" class="muted" aria-live="polite">Prêt à rechercher.</p>
+  <div id="results" class="hidden"><h3>Résultats possibles</h3><p class="muted">Suggestions par mots-clés, à vérifier.</p><div id="list"></div></div>
+</section>
+<section class="card">
+  <h2 style="margin-top:0">✨ Ce que FINDIT AI veut offrir</h2>
+  <div class="features">
+    <div class="feature"><div>🎞️</div><strong>Films & animés</strong><span class="muted">Retrouver un titre oublié.</span></div>
+    <div class="feature"><div>📸</div><strong>Recherche par photo</strong><span class="muted">Analyse d’image par IA.</span></div>
+    <div class="feature"><div>💬</div><strong>Description de scène</strong><span class="muted">Recherche par détails.</span></div>
+    <div class="feature"><div>💰</div><strong>Monétisation future</strong><span class="muted">Publicité ou affiliation, si éligible.</span></div>
+  </div>
+  <p class="muted" style="margin-bottom:0">Les revenus ne sont pas garantis. Il faudra publier le site, attirer des visiteurs et vérifier les règles des services de monétisation.</p>
+</section>
+<footer>FINDIT AI · Les résultats IA sont des suggestions à vérifier.</footer>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+function mode(m){$('descTab').setAttribute('aria-pressed',String(m==='desc'));$('photoTab').setAttribute('aria-pressed',String(m==='photo'));$('descPanel').classList.toggle('hidden',m!=='desc');$('photoPanel').classList.toggle('hidden',m!=='photo');$('status').textContent=m==='photo'?'Sélectionne une image. La reconnaissance automatique sera ajoutée plus tard.':'Décris la scène pour rechercher des pistes.'}
+$('descTab').addEventListener('click',()=>mode('desc'));$('photoTab').addEventListener('click',()=>mode('photo'));
+$('photo').addEventListener('change',()=>{const f=$('photo').files[0];$('preview').replaceChildren();if(!f)return;if(!f.type.startsWith('image/')){ $('status').textContent='Choisis un fichier image valide.';return;}const img=document.createElement('img');img.className='preview';img.alt='Aperçu de la photo sélectionnée';img.src=URL.createObjectURL(f);$('preview').appendChild(img);$('status').textContent='Photo sélectionnée. Décris-la pour obtenir des pistes.';});
+async function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
+}
+$('search').addEventListener('click',async()=>{
+  const q=$('description').value.trim();
+  const file=$('photo').files[0];
+  const kind=$('kind').value;
+  if(!q&&!file){$('status').textContent='Écris quelques détails ou sélectionne une photo.';return;}
+  if(file&&!file.type.startsWith('image/')){$('status').textContent='Choisis un fichier image valide.';return;}
+  if(file&&file.size>4*1024*1024){$('status').textContent='Cette photo est trop volumineuse. Choisis une image de moins de 4 Mo.';return;}
+  const button=$('search');button.disabled=true;button.textContent='⏳ Analyse en cours…';$('status').textContent='L’IA analyse ta demande. Patiente un instant…';$('results').classList.add('hidden');$('list').replaceChildren();
+  try{
+    let imageDataUrl=null;if(file)imageDataUrl=await fileToDataURL(file);
+    const response=await fetch('/.netlify/functions/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({description:q,kind,imageDataUrl})});
+    const payload=await response.json();if(!response.ok)throw new Error(payload.error||'La recherche a échoué.');
+    const d=document.createElement('div');d.className='result';d.style.whiteSpace='pre-wrap';d.textContent=payload.result||'Aucun résultat. Essaie avec plus de détails.';$('list').appendChild(d);$('results').classList.remove('hidden');$('status').textContent='Analyse terminée. Les suggestions peuvent être inexactes : vérifie les titres.';
+  }catch(err){$('status').textContent=err.message||'Impossible de joindre l’IA. Vérifie la configuration et réessaie.';}
+  finally{button.disabled=false;button.textContent='🔍 Rechercher un titre';}
+});
+})();
+</script>
+</body>
+</html>
